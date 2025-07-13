@@ -6,7 +6,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
-	"github.com/yourusername/nextjs-echo-crud-app/config"
+	"github.com/Artur2912/pet1/config"
 )
 
 func JWTAuth(cfg *config.Config) echo.MiddlewareFunc {

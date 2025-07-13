@@ -7,9 +7,10 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
-	
-	
 	"golang.org/x/crypto/bcrypt"
+	"github.com/Artur2912/pet1/models"
+	"github.com/Artur2912/pet1/config"
+	
 )
 
 
@@ -93,11 +94,11 @@ func (h *Handler) UpdateUser(c echo.Context)error{
 	if err := h.Config.DB.First(&user, id).Error; err != nil{
 		return c.JSON(http.StatusNotFound, echo.Map{"error": "User not found"})
 	}
-	var updateUser models.User
+	var updateUser models.UpdateUser
 	if err := c.Bind(&updateUser); err != nil{
 		return c.JSON(http.StatusBadRequest, echo.Map{"error": "Invalid json"})
 	}
-	if err := h.Config.Validate.Struct(&updateUser); err != nil{
+	if err := h.Validate.Struct(&updateUser); err != nil{
 		return c.JSON(http.StatusBadRequest, echo.Map{"error": "Invalid input data"})	
 	}
 	if updateUser.Name != nil{
@@ -107,7 +108,7 @@ func (h *Handler) UpdateUser(c echo.Context)error{
 		user.Email = *updateUser.Email
 	}
 	if updateUser.Password != nil{
-		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(*updateUser.Passoword), bcrypt.DefaultCost)
+		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(*updateUser.Password), bcrypt.DefaultCost)
 		if err != nil{
 			return c.JSON(http.StatusInternalServerError, echo.Map{"error": "Failed hashed password"})
 		}

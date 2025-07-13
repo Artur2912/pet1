@@ -2,11 +2,10 @@ package config
 
 import (
 	"fmt"
-	"log"
+	
 	"os"
-
-	"models/users"
-
+	"github.com/Artur2912/pet1/models"
+	
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -36,7 +35,7 @@ type AppConfig struct{
 
 func LoadEnv()error{
 	if err := godotenv.Load(); err != nil{
-		return fmt.Errorf("Error: %w", err)
+		return fmt.Errorf("error: %w", err)
 	}
 	return nil
 }
@@ -59,14 +58,13 @@ func (v *DBConfig) DSN()string{
 func NewDB(cfg *DBConfig)(*gorm.DB, error){
 	db, err := gorm.Open(postgres.Open(cfg.DSN()), &gorm.Config{})
 	if err != nil{
-		return  nil, fmt.Errorf("Error: %w", err)
+		return  nil, fmt.Errorf("error: %w", err)
 	}
 	return  db, nil
 }
 
-func (db *gorm.DB)RunMigration()error{
-	var user models.User
-	if err := db.AutoMigrate(&user);err != nil{
+func RunMigration(db *gorm.DB) error {
+	if err := db.AutoMigrate(&models.User{}); err != nil {
 		return fmt.Errorf("failed to run migrations: %w", err)
 	}
 	return nil
@@ -80,16 +78,23 @@ func NewConfigApp()*AppConfig{
 }
 
 func LoadConfig()(*Config,error){
-	LoadEnv()
+	if err := LoadEnv(); err != nil {
+    return nil, err
+}
+
 	DBConfig := NewDBconfig()
+
 	ConfigApp := NewConfigApp()
+
 	db, err := NewDB(DBConfig)
 	if err != nil{
 		return nil, err
 	}
-	if err := db.RunMigration(); err != nil{
+
+	if err := RunMigration(db); err != nil{
 		return nil, err
 	}
+
 	return &Config{
 		DB: db,
 		AppConfig: ConfigApp,

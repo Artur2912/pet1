@@ -5,9 +5,9 @@ import (
 	"log"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/echo/v4"
-	"github.com/yourusername/nextjs-echo-crud-app/config"
-	"github.com/yourusername/nextjs-echo-crud-app/handlers"
-	"github.com/yourusername/nextjs-echo-crud-app/routes"
+	"github.com/Artur2912/pet1/routes"
+	"github.com/Artur2912/pet1/handlers"
+	"github.com/Artur2912/pet1/config"
 )
 
 func main(){

@@ -5,9 +5,9 @@ import (
 	
 	"time"
 
-	"github.com/golang-jwt/jwy/v5"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
-	"github.com/yourusername/nextjs-echo-crud-app/models"
+	"github.com/Artur2912/pet1/models"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -23,7 +23,7 @@ func (h *Handler) Login(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, echo.Map{"error": "Invalid JSON data"})
 	}
 
-	if err := h.Config.Validate.Struct(input); err != nil {
+	if err := h.Validate.Struct(input); err != nil {
 		return c.JSON(http.StatusBadRequest, echo.Map{"error": err.Error()})
 	}
 
